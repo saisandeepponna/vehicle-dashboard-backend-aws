@@ -1,0 +1,51 @@
+service: mysql-lambda-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-2 # Replace with your preferred region
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http:
+          path: indicators
+          method: get
+      - http:
+          path: indicators/id/{id}
+          method: get
+      - http:
+          path: indicators/id/{id}
+          method: put
+      - http:
+          path: motor-data
+          method: get
+      - http:
+          path: motor-data
+          method: put
+      - http:
+          path: motor-speed
+          method: put
+      - http:
+          path: motor-power
+          method: put
+      - http:
+          path: charging-state
+          method: put
+
+plugins:
+  - serverless-dotenv-plugin # Ensure you have this plugin installed to use .env files
+
+custom:
+  dotenv:
+    include:
+      - DB_HOST
+      - DB_USER
+      - DB_PASSWORD
+      - DB_NAME
